@@ -63,5 +63,8 @@ class DatabaseSeeder extends Seeder
 
         // Seed companies and attach users to them
         $this->call(CompanySeeder::class);
+
+        // Seed advanced data for testing (prospects, clients, follow-ups, blog posts, etc.)
+        $this->call(AdvancedDataSeeder::class);
     }
 }
