@@ -60,5 +60,8 @@ class DatabaseSeeder extends Seeder
             'role' => 'user',
             'is_approved' => false,
         ]);
+
+        // Seed companies and attach users to them
+        $this->call(CompanySeeder::class);
     }
 }

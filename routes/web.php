@@ -110,6 +110,10 @@ Route::middleware(['auth', 'approved'])->group(function () {
     Route::resource('blog-posts', \App\Http\Controllers\BlogPostController::class);
     Route::resource('blog-categories', \App\Http\Controllers\BlogCategoryController::class)->except(['create', 'show', 'edit']);
     Route::resource('blog-tags', \App\Http\Controllers\BlogTagController::class)->except(['create', 'show', 'edit']);
+
+    // Company Management (Multi-tenancy)
+    Route::resource('companies', \App\Http\Controllers\CompanyController::class);
+    Route::post('companies/{company}/switch', [\App\Http\Controllers\CompanyController::class, 'switch'])->name('companies.switch');
 });
 
 require __DIR__.'/auth.php';

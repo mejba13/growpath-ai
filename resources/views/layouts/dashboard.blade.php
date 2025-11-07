@@ -103,6 +103,19 @@
                             Blog Posts
                         </a>
 
+                        <!-- Multi-Tenancy -->
+                        <div class="pt-4 mt-4 border-t border-neutral-200">
+                            <a href="{{ route('companies.index') }}" class="flex items-center px-4 py-3 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('companies.*') ? 'bg-primary-accent text-white' : 'text-neutral-700 hover:bg-neutral-100' }}">
+                                <svg class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                </svg>
+                                Companies
+                                <span class="ml-auto bg-primary-accent/10 text-primary-accent text-xs font-semibold px-2 py-1 rounded-full">
+                                    {{ auth()->user()->companies()->count() }}
+                                </span>
+                            </a>
+                        </div>
+
                         @can('manage-team')
                         <div class="pt-4 mt-4 border-t border-neutral-200">
                             <a href="{{ route('team.index') }}" class="flex items-center px-4 py-3 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('team.*') ? 'bg-primary-accent text-white' : 'text-neutral-700 hover:bg-neutral-100' }}">
@@ -178,8 +191,11 @@
 
                         <!-- Actions -->
                         <div class="flex items-center space-x-4">
+                            <!-- Company Switcher -->
+                            <x-company.switcher />
+
                             <!-- Notifications -->
-                            <button class="text-neutral-500 hover:text-neutral-700">
+                            <button class="text-neutral-500 hover:text-neutral-700 hidden sm:block">
                                 <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                                 </svg>

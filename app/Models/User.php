@@ -26,6 +26,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'current_company_id',
     ];
 
     /**
@@ -121,5 +122,51 @@ class User extends Authenticatable
     public function assignedProspects(): HasMany
     {
         return $this->hasMany(Prospect::class, 'assigned_to');
+    }
+
+    /**
+     * Get the companies the user belongs to.
+     */
+    public function companies()
+    {
+        return $this->belongsToMany(Company::class)->withPivot('role')->withTimestamps();
+    }
+
+    /**
+     * Get the user's current company.
+     */
+    public function currentCompany()
+    {
+        return $this->belongsTo(Company::class, 'current_company_id');
+    }
+
+    /**
+     * Switch to a different company.
+     */
+    public function switchCompany(Company $company)
+    {
+        if ($this->companies->contains($company)) {
+            $this->current_company_id = $company->id;
+            $this->save();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check if user belongs to a company.
+     */
+    public function belongsToCompany(Company $company)
+    {
+        return $this->companies->contains($company);
+    }
+
+    /**
+     * Get user's role in a specific company.
+     */
+    public function roleInCompany(Company $company)
+    {
+        $pivot = $this->companies()->where('company_id', $company->id)->first()?->pivot;
+        return $pivot?->role;
     }
 }
