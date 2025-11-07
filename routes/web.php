@@ -32,8 +32,8 @@
  * -----------------------------------------------------------------------------
  */
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Livewire\Volt\Volt;
 
 /*
 |--------------------------------------------------------------------------
@@ -114,11 +114,10 @@ Route::prefix('dashboard')->middleware(['auth', 'approved'])->group(function () 
     |--------------------------------------------------------------------------
     */
 
-    Route::prefix('profile')->name('profile.')->group(function () {
-        Route::get('/', [ProfileController::class, 'edit'])->name('edit');
-        Route::patch('/', [ProfileController::class, 'update'])->name('update');
-        Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
-    });
+    // Settings Pages (Volt Components)
+    Volt::route('profile', 'settings.profile')->name('profile.edit');
+    Volt::route('user-password', 'settings.password')->name('user-password.edit');
+    Volt::route('appearance', 'settings.appearance')->name('appearance.edit');
 
     /*
     |--------------------------------------------------------------------------
@@ -193,6 +192,20 @@ Route::prefix('dashboard')->middleware(['auth', 'approved'])->group(function () 
         Route::get('/', [\App\Http\Controllers\SettingsController::class, 'index'])->name('index');
         Route::patch('/', [\App\Http\Controllers\SettingsController::class, 'update'])->name('update');
     });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Two-Factor Authentication Settings
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('two-factor', function () {
+        if (! \Laravel\Fortify\Features::canManageTwoFactorAuthentication()) {
+            abort(403, 'Two-factor authentication is not enabled.');
+        }
+
+        return view('livewire.settings.two-factor');
+    })->middleware('password.confirm')->name('two-factor.show');
 
     /*
     |--------------------------------------------------------------------------
