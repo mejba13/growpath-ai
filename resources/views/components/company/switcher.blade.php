@@ -161,7 +161,7 @@
                         Cancel
                     </button>
                     <form
-                        :action="selectedCompany ? '{{ url('companies') }}/' + selectedCompany.id + '/switch' : ''"
+                        :action="selectedCompany ? '{{ url('dashboard/companies') }}/' + selectedCompany.id + '/switch' : ''"
                         method="POST"
                         class="inline"
                     >
