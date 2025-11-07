@@ -59,10 +59,10 @@ class FollowUpController extends Controller
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('subject', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%")
-                  ->orWhereHas('prospect', function ($pq) use ($search) {
-                      $pq->where('company_name', 'like', "%{$search}%");
-                  });
+                    ->orWhere('description', 'like', "%{$search}%")
+                    ->orWhereHas('prospect', function ($pq) use ($search) {
+                        $pq->where('company_name', 'like', "%{$search}%");
+                    });
             });
         }
 

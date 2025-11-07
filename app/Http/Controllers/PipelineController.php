@@ -13,19 +13,19 @@ class PipelineController extends Controller
     public function index(Request $request)
     {
         // Check permission
-        if (!$request->user()->can('view-pipeline')) {
+        if (! $request->user()->can('view-pipeline')) {
             abort(403);
         }
 
         // Get prospects based on permission
         $query = Prospect::with(['user', 'assignedUser']);
 
-        if (!$request->user()->can('view-all-prospects')) {
+        if (! $request->user()->can('view-all-prospects')) {
             $query->where('user_id', $request->user()->id);
         }
 
         // Exclude won/lost by default unless filter is applied
-        if (!$request->filled('show_closed')) {
+        if (! $request->filled('show_closed')) {
             $query->active();
         }
 

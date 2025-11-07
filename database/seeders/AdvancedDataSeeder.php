@@ -26,8 +26,9 @@ class AdvancedDataSeeder extends Seeder
         $admin = User::where('email', 'admin@growpath.com')->first();
         $companies = Company::all();
 
-        if (!$admin || $companies->count() === 0) {
+        if (! $admin || $companies->count() === 0) {
             $this->command->error('❌ Please run DatabaseSeeder first to create admin user and companies!');
+
             return;
         }
 
@@ -82,7 +83,7 @@ class AdvancedDataSeeder extends Seeder
         foreach ($prospectData as $index => $data) {
             // Make email unique by appending company ID
             $emailParts = explode('@', $data['email']);
-            $uniqueEmail = $emailParts[0] . '+c' . $company->id . '@' . $emailParts[1];
+            $uniqueEmail = $emailParts[0].'+c'.$company->id.'@'.$emailParts[1];
 
             Prospect::create([
                 'company_id' => $company->id,
@@ -97,7 +98,7 @@ class AdvancedDataSeeder extends Seeder
                 'source' => $sources[array_rand($sources)],
                 'priority' => $priorities[array_rand($priorities)],
                 'conversion_probability' => rand(20, 90),
-                'notes' => "Interested in our services. Follow up scheduled.",
+                'notes' => 'Interested in our services. Follow up scheduled.',
                 'next_follow_up_at' => now()->addDays(rand(3, 14)),
                 'created_at' => now()->subDays(rand(1, 60)),
             ]);
@@ -213,7 +214,7 @@ class AdvancedDataSeeder extends Seeder
             $category = BlogCategory::create([
                 'company_id' => $company->id,
                 'name' => $catData['name'],
-                'slug' => $catData['slug'] . '-c' . $company->id,
+                'slug' => $catData['slug'].'-c'.$company->id,
                 'description' => $catData['description'],
             ]);
             $createdCategories[] = $category;
@@ -226,7 +227,7 @@ class AdvancedDataSeeder extends Seeder
             $tag = BlogTag::create([
                 'company_id' => $company->id,
                 'name' => $tagName,
-                'slug' => Str::slug($tagName) . '-c' . $company->id,
+                'slug' => Str::slug($tagName).'-c'.$company->id,
             ]);
             $createdTags[] = $tag;
         }
@@ -261,7 +262,7 @@ class AdvancedDataSeeder extends Seeder
                 'author_id' => $admin->id,
                 'category_id' => $createdCategories[array_rand($createdCategories)]->id,
                 'title' => $postData['title'],
-                'slug' => Str::slug($postData['title']) . '-c' . $company->id,
+                'slug' => Str::slug($postData['title']).'-c'.$company->id,
                 'excerpt' => $postData['excerpt'],
                 'content' => $postData['content'],
                 'featured_image' => null,

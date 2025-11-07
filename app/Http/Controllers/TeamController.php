@@ -15,7 +15,7 @@ class TeamController extends Controller
     public function index(Request $request)
     {
         // Check permission
-        if (!$request->user()->can('manage-team')) {
+        if (! $request->user()->can('manage-team')) {
             abort(403);
         }
 
@@ -26,7 +26,7 @@ class TeamController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
@@ -58,6 +58,7 @@ class TeamController extends Controller
         $this->authorize('manage-team');
 
         $roles = Role::all();
+
         return view('team.create', compact('roles'));
     }
 
@@ -118,6 +119,7 @@ class TeamController extends Controller
         $this->authorize('manage-team');
 
         $roles = Role::all();
+
         return view('team.edit', compact('user', 'roles'));
     }
 
@@ -195,7 +197,7 @@ class TeamController extends Controller
     public function approve(User $user)
     {
         // Only admins can approve users
-        if (!auth()->user()->isAdmin()) {
+        if (! auth()->user()->isAdmin()) {
             abort(403);
         }
 
@@ -220,7 +222,7 @@ class TeamController extends Controller
     public function reject(User $user)
     {
         // Only admins can reject users
-        if (!auth()->user()->isAdmin()) {
+        if (! auth()->user()->isAdmin()) {
             abort(403);
         }
 

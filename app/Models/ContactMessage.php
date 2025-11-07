@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Traits\BelongsToTenant;
-
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -39,7 +37,7 @@ class ContactMessage extends Model
      */
     public function markAsRead(): void
     {
-        if (!$this->read_at) {
+        if (! $this->read_at) {
             $this->update([
                 'read_at' => now(),
                 'status' => 'read',

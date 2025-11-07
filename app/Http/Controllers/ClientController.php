@@ -7,13 +7,18 @@
  * businesses manage prospects, clients, and sales pipelines efficiently.
  * -----------------------------------------------------------------------------
  *
- * @package    GrowPath AI CRM
  * @author     Engr Mejba Ahmed
+ *
  * @role       AI Developer • Software Engineer • Cloud DevOps
+ *
  * @website    https://www.mejba.me
+ *
  * @poweredBy  Ramlit Limited — https://ramlit.com
+ *
  * @version    1.0.0
+ *
  * @since      November 7, 2025
+ *
  * @copyright  (c) 2025 Engr Mejba Ahmed
  * @license    Proprietary - All Rights Reserved
  *
@@ -29,10 +34,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateClientRequest;
 use App\Models\Client;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Requests\UpdateClientRequest;
 
 class ClientController extends Controller
 {
@@ -52,7 +57,7 @@ class ClientController extends Controller
         $query = Client::with(['user', 'prospect'])
             ->where(function ($query) use ($request) {
                 // If user doesn't have permission to view all clients, only show their own
-                if (!$request->user()->can('view-all-clients')) {
+                if (! $request->user()->can('view-all-clients')) {
                     $query->where('user_id', $request->user()->id);
                 }
             });
@@ -62,8 +67,8 @@ class ClientController extends Controller
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('company_name', 'like', "%{$search}%")
-                  ->orWhere('industry', 'like', "%{$search}%")
-                  ->orWhere('notes', 'like', "%{$search}%");
+                    ->orWhere('industry', 'like', "%{$search}%")
+                    ->orWhere('notes', 'like', "%{$search}%");
             });
         }
 
@@ -196,7 +201,7 @@ class ClientController extends Controller
         // Get clients with same filtering as index
         $query = Client::with(['user', 'prospect'])
             ->where(function ($query) use ($request) {
-                if (!$request->user()->can('view-all-clients')) {
+                if (! $request->user()->can('view-all-clients')) {
                     $query->where('user_id', $request->user()->id);
                 }
             });
@@ -206,7 +211,7 @@ class ClientController extends Controller
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('company_name', 'like', "%{$search}%")
-                  ->orWhere('industry', 'like', "%{$search}%");
+                    ->orWhere('industry', 'like', "%{$search}%");
             });
         }
 
@@ -221,7 +226,7 @@ class ClientController extends Controller
         $clients = $query->get();
 
         // Generate CSV
-        $filename = 'clients_' . now()->format('Y-m-d_His') . '.csv';
+        $filename = 'clients_'.now()->format('Y-m-d_His').'.csv';
 
         $headers = [
             'Content-Type' => 'text/csv',

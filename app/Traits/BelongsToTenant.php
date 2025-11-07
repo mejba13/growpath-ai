@@ -13,7 +13,7 @@ trait BelongsToTenant
         static::addGlobalScope(new TenantScope);
 
         static::creating(function ($model) {
-            if (session()->has('tenant_id') && !$model->company_id) {
+            if (session()->has('tenant_id') && ! $model->company_id) {
                 $model->company_id = session('tenant_id');
             }
         });

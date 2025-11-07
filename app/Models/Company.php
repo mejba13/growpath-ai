@@ -7,13 +7,18 @@
  * businesses manage prospects, clients, and sales pipelines efficiently.
  * -----------------------------------------------------------------------------
  *
- * @package    GrowPath AI CRM
  * @author     Engr Mejba Ahmed
+ *
  * @role       AI Developer • Software Engineer • Cloud DevOps
+ *
  * @website    https://www.mejba.me
+ *
  * @poweredBy  Ramlit Limited — https://ramlit.com
+ *
  * @version    1.0.0
+ *
  * @since      November 7, 2025
+ *
  * @copyright  (c) 2025 Engr Mejba Ahmed
  * @license    Proprietary - All Rights Reserved
  *

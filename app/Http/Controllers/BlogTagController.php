@@ -10,6 +10,7 @@ class BlogTagController extends Controller
     public function index()
     {
         $tags = BlogTag::withCount('posts')->latest()->get();
+
         return response()->json($tags);
     }
 
@@ -24,14 +25,14 @@ class BlogTagController extends Controller
         return response()->json([
             'success' => true,
             'tag' => $tag,
-            'message' => 'Tag created successfully'
+            'message' => 'Tag created successfully',
         ]);
     }
 
     public function update(Request $request, BlogTag $blogTag)
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', 'unique:blog_tags,name,' . $blogTag->id],
+            'name' => ['required', 'string', 'max:255', 'unique:blog_tags,name,'.$blogTag->id],
         ]);
 
         $blogTag->update($validated);
@@ -39,7 +40,7 @@ class BlogTagController extends Controller
         return response()->json([
             'success' => true,
             'tag' => $blogTag,
-            'message' => 'Tag updated successfully'
+            'message' => 'Tag updated successfully',
         ]);
     }
 
@@ -49,7 +50,7 @@ class BlogTagController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Tag deleted successfully'
+            'message' => 'Tag deleted successfully',
         ]);
     }
 }

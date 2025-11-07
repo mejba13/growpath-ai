@@ -7,13 +7,18 @@
  * businesses manage prospects, clients, and sales pipelines efficiently.
  * -----------------------------------------------------------------------------
  *
- * @package    GrowPath AI CRM
  * @author     Engr Mejba Ahmed
+ *
  * @role       AI Developer • Software Engineer • Cloud DevOps
+ *
  * @website    https://www.mejba.me
+ *
  * @poweredBy  Ramlit Limited — https://ramlit.com
+ *
  * @version    1.0.0
+ *
  * @since      November 7, 2025
+ *
  * @copyright  (c) 2025 Engr Mejba Ahmed
  * @license    Proprietary - All Rights Reserved
  *
@@ -33,11 +38,11 @@ use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Plan;
 use App\Models\Subscription;
-use Stripe\Stripe;
 use Stripe\Customer;
-use Stripe\PaymentIntent;
-use Stripe\Subscription as StripeSubscription;
 use Stripe\Exception\ApiErrorException;
+use Stripe\PaymentIntent;
+use Stripe\Stripe;
+use Stripe\Subscription as StripeSubscription;
 
 class StripeService
 {
@@ -71,7 +76,7 @@ class StripeService
                 ],
             ]);
         } catch (ApiErrorException $e) {
-            throw new \Exception('Failed to create Stripe customer: ' . $e->getMessage());
+            throw new \Exception('Failed to create Stripe customer: '.$e->getMessage());
         }
     }
 
@@ -98,7 +103,7 @@ class StripeService
                 ],
             ]);
         } catch (ApiErrorException $e) {
-            throw new \Exception('Failed to create payment intent: ' . $e->getMessage());
+            throw new \Exception('Failed to create payment intent: '.$e->getMessage());
         }
     }
 
@@ -147,7 +152,7 @@ class StripeService
 
             return $stripeSubscription;
         } catch (ApiErrorException $e) {
-            throw new \Exception('Failed to create subscription: ' . $e->getMessage());
+            throw new \Exception('Failed to create subscription: '.$e->getMessage());
         }
     }
 
@@ -161,7 +166,7 @@ class StripeService
                 StripeSubscription::retrieve($subscription->stripe_subscription_id)->cancel();
             }
         } catch (ApiErrorException $e) {
-            throw new \Exception('Failed to cancel subscription: ' . $e->getMessage());
+            throw new \Exception('Failed to cancel subscription: '.$e->getMessage());
         }
     }
 
@@ -176,7 +181,7 @@ class StripeService
                 ['cancel_at_period_end' => false]
             );
         } catch (ApiErrorException $e) {
-            throw new \Exception('Failed to resume subscription: ' . $e->getMessage());
+            throw new \Exception('Failed to resume subscription: '.$e->getMessage());
         }
     }
 
@@ -188,7 +193,7 @@ class StripeService
         try {
             return PaymentIntent::retrieve($paymentIntentId);
         } catch (ApiErrorException $e) {
-            throw new \Exception('Failed to retrieve payment intent: ' . $e->getMessage());
+            throw new \Exception('Failed to retrieve payment intent: '.$e->getMessage());
         }
     }
 
@@ -222,7 +227,7 @@ class StripeService
     /**
      * Create local order record.
      */
-    public function createLocalOrder(PaymentIntent $paymentIntent, Plan $plan, $user, Subscription $subscription = null): Order
+    public function createLocalOrder(PaymentIntent $paymentIntent, Plan $plan, $user, ?Subscription $subscription = null): Order
     {
         return Order::create([
             'company_id' => $user->currentCompany?->id,
@@ -246,7 +251,7 @@ class StripeService
     /**
      * Create local payment record.
      */
-    public function createLocalPayment(PaymentIntent $paymentIntent, Order $order, Subscription $subscription = null): Payment
+    public function createLocalPayment(PaymentIntent $paymentIntent, Order $order, ?Subscription $subscription = null): Payment
     {
         $charge = $paymentIntent->charges->data[0] ?? null;
 

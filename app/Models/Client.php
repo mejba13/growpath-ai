@@ -7,13 +7,18 @@
  * businesses manage prospects, clients, and sales pipelines efficiently.
  * -----------------------------------------------------------------------------
  *
- * @package    GrowPath AI CRM
  * @author     Engr Mejba Ahmed
+ *
  * @role       AI Developer • Software Engineer • Cloud DevOps
+ *
  * @website    https://www.mejba.me
+ *
  * @poweredBy  Ramlit Limited — https://ramlit.com
+ *
  * @version    1.0.0
+ *
  * @since      November 7, 2025
+ *
  * @copyright  (c) 2025 Engr Mejba Ahmed
  * @license    Proprietary - All Rights Reserved
  *
@@ -30,14 +35,13 @@
 namespace App\Models;
 
 use App\Traits\BelongsToTenant;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Client extends Model
 {
-    use HasFactory, BelongsToTenant;
+    use BelongsToTenant, HasFactory;
 
     /**
      * The attributes that are mass assignable.

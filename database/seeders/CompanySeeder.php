@@ -85,7 +85,7 @@ class CompanySeeder extends Seeder
                 $company->users()->attach($adminUser->id, ['role' => 'owner']);
 
                 // Set first company as admin's current company
-                if (!$adminUser->current_company_id) {
+                if (! $adminUser->current_company_id) {
                     $adminUser->current_company_id = $company->id;
                     $adminUser->save();
                 }

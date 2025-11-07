@@ -7,13 +7,18 @@
  * businesses manage prospects, clients, and sales pipelines efficiently.
  * -----------------------------------------------------------------------------
  *
- * @package    GrowPath AI CRM
  * @author     Engr Mejba Ahmed
+ *
  * @role       AI Developer • Software Engineer • Cloud DevOps
+ *
  * @website    https://www.mejba.me
+ *
  * @poweredBy  Ramlit Limited — https://ramlit.com
+ *
  * @version    1.0.0
+ *
  * @since      November 7, 2025
+ *
  * @copyright  (c) 2025 Engr Mejba Ahmed
  * @license    Proprietary - All Rights Reserved
  *
@@ -68,7 +73,7 @@ class Payment extends Model
         parent::boot();
 
         static::creating(function ($payment) {
-            if (!$payment->transaction_id) {
+            if (! $payment->transaction_id) {
                 $payment->transaction_id = static::generateTransactionId();
             }
         });
@@ -80,7 +85,7 @@ class Payment extends Model
     public static function generateTransactionId(): string
     {
         do {
-            $id = 'TXN-' . now()->format('Ymd') . '-' . strtoupper(substr(uniqid(), -8));
+            $id = 'TXN-'.now()->format('Ymd').'-'.strtoupper(substr(uniqid(), -8));
         } while (static::where('transaction_id', $id)->exists());
 
         return $id;
@@ -156,7 +161,7 @@ class Payment extends Model
     /**
      * Mark payment as failed.
      */
-    public function markAsFailed(string $reason = null): bool
+    public function markAsFailed(?string $reason = null): bool
     {
         return $this->update([
             'status' => 'failed',
@@ -186,6 +191,6 @@ class Payment extends Model
      */
     public function getFormattedAmountAttribute(): string
     {
-        return '$' . number_format($this->amount, 2);
+        return '$'.number_format($this->amount, 2);
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BlogPost;
 use App\Models\BlogCategory;
+use App\Models\BlogPost;
 use App\Models\BlogTag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -64,6 +64,7 @@ class BlogPostController extends Controller
     public function show(BlogPost $blogPost)
     {
         $blogPost->load(['category', 'author', 'tags']);
+
         return view('blog.show', compact('blogPost'));
     }
 

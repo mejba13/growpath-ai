@@ -7,13 +7,18 @@
  * businesses manage prospects, clients, and sales pipelines efficiently.
  * -----------------------------------------------------------------------------
  *
- * @package    GrowPath AI CRM
  * @author     Engr Mejba Ahmed
+ *
  * @role       AI Developer • Software Engineer • Cloud DevOps
+ *
  * @website    https://www.mejba.me
+ *
  * @poweredBy  Ramlit Limited — https://ramlit.com
+ *
  * @version    1.0.0
+ *
  * @since      November 7, 2025
+ *
  * @copyright  (c) 2025 Engr Mejba Ahmed
  * @license    Proprietary - All Rights Reserved
  *
@@ -30,14 +35,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Subscription;
-use App\Services\StripeService;
 use App\Services\PayPalService;
-use Illuminate\Http\Request;
+use App\Services\StripeService;
 use Illuminate\Support\Facades\DB;
 
 class SubscriptionController extends Controller
 {
     protected $stripeService;
+
     protected $paypalService;
 
     public function __construct(StripeService $stripeService, PayPalService $paypalService)
@@ -94,7 +99,8 @@ class SubscriptionController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Failed to cancel subscription: ' . $e->getMessage());
+
+            return back()->with('error', 'Failed to cancel subscription: '.$e->getMessage());
         }
     }
 
@@ -108,7 +114,7 @@ class SubscriptionController extends Controller
             abort(403);
         }
 
-        if (!$subscription->isCancelled()) {
+        if (! $subscription->isCancelled()) {
             return back()->with('error', 'Subscription is not cancelled.');
         }
 
@@ -131,7 +137,8 @@ class SubscriptionController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Failed to resume subscription: ' . $e->getMessage());
+
+            return back()->with('error', 'Failed to resume subscription: '.$e->getMessage());
         }
     }
 

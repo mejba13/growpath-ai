@@ -10,6 +10,7 @@ class BlogCategoryController extends Controller
     public function index()
     {
         $categories = BlogCategory::withCount('posts')->latest()->get();
+
         return response()->json($categories);
     }
 
@@ -25,14 +26,14 @@ class BlogCategoryController extends Controller
         return response()->json([
             'success' => true,
             'category' => $category,
-            'message' => 'Category created successfully'
+            'message' => 'Category created successfully',
         ]);
     }
 
     public function update(Request $request, BlogCategory $blogCategory)
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', 'unique:blog_categories,name,' . $blogCategory->id],
+            'name' => ['required', 'string', 'max:255', 'unique:blog_categories,name,'.$blogCategory->id],
             'description' => ['nullable', 'string'],
         ]);
 
@@ -41,7 +42,7 @@ class BlogCategoryController extends Controller
         return response()->json([
             'success' => true,
             'category' => $blogCategory,
-            'message' => 'Category updated successfully'
+            'message' => 'Category updated successfully',
         ]);
     }
 
@@ -51,7 +52,7 @@ class BlogCategoryController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Category deleted successfully'
+            'message' => 'Category deleted successfully',
         ]);
     }
 }

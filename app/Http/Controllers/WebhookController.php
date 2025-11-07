@@ -7,13 +7,18 @@
  * businesses manage prospects, clients, and sales pipelines efficiently.
  * -----------------------------------------------------------------------------
  *
- * @package    GrowPath AI CRM
  * @author     Engr Mejba Ahmed
+ *
  * @role       AI Developer • Software Engineer • Cloud DevOps
+ *
  * @website    https://www.mejba.me
+ *
  * @poweredBy  Ramlit Limited — https://ramlit.com
+ *
  * @version    1.0.0
+ *
  * @since      November 7, 2025
+ *
  * @copyright  (c) 2025 Engr Mejba Ahmed
  * @license    Proprietary - All Rights Reserved
  *
@@ -29,13 +34,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Subscription;
 use App\Models\Order;
 use App\Models\Payment;
+use App\Models\Subscription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Stripe\Webhook;
 use Stripe\Exception\SignatureVerificationException;
+use Stripe\Webhook;
 
 class WebhookController extends Controller
 {
@@ -55,10 +60,12 @@ class WebhookController extends Controller
                 $webhookSecret
             );
         } catch (\UnexpectedValueException $e) {
-            Log::error('Invalid webhook payload: ' . $e->getMessage());
+            Log::error('Invalid webhook payload: '.$e->getMessage());
+
             return response()->json(['error' => 'Invalid payload'], 400);
         } catch (SignatureVerificationException $e) {
-            Log::error('Invalid webhook signature: ' . $e->getMessage());
+            Log::error('Invalid webhook signature: '.$e->getMessage());
+
             return response()->json(['error' => 'Invalid signature'], 400);
         }
 
@@ -91,13 +98,14 @@ class WebhookController extends Controller
                     break;
 
                 default:
-                    Log::info('Unhandled webhook event: ' . $event->type);
+                    Log::info('Unhandled webhook event: '.$event->type);
             }
 
             return response()->json(['status' => 'success']);
 
         } catch (\Exception $e) {
-            Log::error('Webhook handler error: ' . $e->getMessage());
+            Log::error('Webhook handler error: '.$e->getMessage());
+
             return response()->json(['error' => 'Webhook handler error'], 500);
         }
     }
@@ -123,7 +131,7 @@ class WebhookController extends Controller
                 $order->invoice->markAsPaid();
             }
 
-            Log::info('Payment succeeded for order: ' . $order->order_number);
+            Log::info('Payment succeeded for order: '.$order->order_number);
         }
     }
 
@@ -143,7 +151,7 @@ class WebhookController extends Controller
                 $payment->markAsFailed($paymentIntent->last_payment_error?->message);
             }
 
-            Log::warning('Payment failed for order: ' . $order->order_number);
+            Log::warning('Payment failed for order: '.$order->order_number);
         }
     }
 
@@ -160,7 +168,7 @@ class WebhookController extends Controller
             $trialEnd = $stripeSubscription->trial_end ? \Carbon\Carbon::createFromTimestamp($stripeSubscription->trial_end) : null;
 
             // Map Stripe status to local status
-            $status = match($stripeSubscription->status) {
+            $status = match ($stripeSubscription->status) {
                 'trialing' => 'trial',
                 'active' => 'active',
                 'past_due' => 'past_due',
@@ -177,7 +185,7 @@ class WebhookController extends Controller
                 'next_payment_at' => $currentPeriodEnd,
             ]);
 
-            Log::info('Subscription updated: ' . $subscription->id);
+            Log::info('Subscription updated: '.$subscription->id);
         }
     }
 
@@ -195,7 +203,7 @@ class WebhookController extends Controller
                 'ends_at' => now(),
             ]);
 
-            Log::info('Subscription cancelled: ' . $subscription->id);
+            Log::info('Subscription cancelled: '.$subscription->id);
         }
     }
 
@@ -212,7 +220,7 @@ class WebhookController extends Controller
                 'failed_payment_count' => 0,
             ]);
 
-            Log::info('Invoice payment succeeded for subscription: ' . $subscription->id);
+            Log::info('Invoice payment succeeded for subscription: '.$subscription->id);
         }
     }
 
@@ -227,7 +235,7 @@ class WebhookController extends Controller
             $subscription->increment('failed_payment_count');
             $subscription->update(['status' => 'past_due']);
 
-            Log::warning('Invoice payment failed for subscription: ' . $subscription->id);
+            Log::warning('Invoice payment failed for subscription: '.$subscription->id);
 
             // TODO: Send notification email to user about failed payment
         }

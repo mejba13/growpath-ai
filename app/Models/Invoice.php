@@ -7,13 +7,18 @@
  * businesses manage prospects, clients, and sales pipelines efficiently.
  * -----------------------------------------------------------------------------
  *
- * @package    GrowPath AI CRM
  * @author     Engr Mejba Ahmed
+ *
  * @role       AI Developer • Software Engineer • Cloud DevOps
+ *
  * @website    https://www.mejba.me
+ *
  * @poweredBy  Ramlit Limited — https://ramlit.com
+ *
  * @version    1.0.0
+ *
  * @since      November 7, 2025
+ *
  * @copyright  (c) 2025 Engr Mejba Ahmed
  * @license    Proprietary - All Rights Reserved
  *
@@ -75,7 +80,7 @@ class Invoice extends Model
         parent::boot();
 
         static::creating(function ($invoice) {
-            if (!$invoice->invoice_number) {
+            if (! $invoice->invoice_number) {
                 $invoice->invoice_number = static::generateInvoiceNumber();
             }
         });
@@ -87,7 +92,7 @@ class Invoice extends Model
     public static function generateInvoiceNumber(): string
     {
         do {
-            $number = 'INV-' . now()->format('Ymd') . '-' . str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
+            $number = 'INV-'.now()->format('Ymd').'-'.str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
         } while (static::where('invoice_number', $number)->exists());
 
         return $number;
@@ -186,10 +191,10 @@ class Invoice extends Model
     {
         return $query->where(function ($q) {
             $q->where('status', 'overdue')
-              ->orWhere(function ($q2) {
-                  $q2->where('status', 'sent')
-                     ->where('due_date', '<', now());
-              });
+                ->orWhere(function ($q2) {
+                    $q2->where('status', 'sent')
+                        ->where('due_date', '<', now());
+                });
         });
     }
 
@@ -198,6 +203,6 @@ class Invoice extends Model
      */
     public function getFormattedTotalAttribute(): string
     {
-        return '$' . number_format($this->total, 2);
+        return '$'.number_format($this->total, 2);
     }
 }

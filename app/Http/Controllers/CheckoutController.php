@@ -7,13 +7,18 @@
  * businesses manage prospects, clients, and sales pipelines efficiently.
  * -----------------------------------------------------------------------------
  *
- * @package    GrowPath AI CRM
  * @author     Engr Mejba Ahmed
+ *
  * @role       AI Developer • Software Engineer • Cloud DevOps
+ *
  * @website    https://www.mejba.me
+ *
  * @poweredBy  Ramlit Limited — https://ramlit.com
+ *
  * @version    1.0.0
+ *
  * @since      November 7, 2025
+ *
  * @copyright  (c) 2025 Engr Mejba Ahmed
  * @license    Proprietary - All Rights Reserved
  *
@@ -29,11 +34,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Plan;
-use App\Models\Order;
 use App\Models\Invoice;
-use App\Services\StripeService;
+use App\Models\Order;
+use App\Models\Plan;
 use App\Services\PayPalService;
+use App\Services\StripeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -41,6 +46,7 @@ use Illuminate\Support\Facades\Log;
 class CheckoutController extends Controller
 {
     protected $stripeService;
+
     protected $paypalService;
 
     public function __construct(StripeService $stripeService, PayPalService $paypalService)
@@ -65,7 +71,7 @@ class CheckoutController extends Controller
      */
     public function show(Plan $plan)
     {
-        if (!$plan->is_active) {
+        if (! $plan->is_active) {
             return redirect()->route('pricing')
                 ->with('error', 'This plan is not available.');
         }
@@ -145,10 +151,10 @@ class CheckoutController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Checkout failed: ' . $e->getMessage());
+            Log::error('Checkout failed: '.$e->getMessage());
 
             return redirect()->route('checkout.failure')
-                ->with('error', 'Payment failed: ' . $e->getMessage());
+                ->with('error', 'Payment failed: '.$e->getMessage());
         }
     }
 
@@ -188,7 +194,7 @@ class CheckoutController extends Controller
             $paypalOrderId = $request->order_id;
 
             // Verify PayPal payment
-            if (!$this->paypalService->verifyPayment($paypalOrderId)) {
+            if (! $this->paypalService->verifyPayment($paypalOrderId)) {
                 throw new \Exception('PayPal payment verification failed');
             }
 
@@ -227,10 +233,10 @@ class CheckoutController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('PayPal checkout failed: ' . $e->getMessage());
+            Log::error('PayPal checkout failed: '.$e->getMessage());
 
             return redirect()->route('checkout.failure')
-                ->with('error', 'Payment failed: ' . $e->getMessage());
+                ->with('error', 'Payment failed: '.$e->getMessage());
         }
     }
 

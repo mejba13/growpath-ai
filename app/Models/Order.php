@@ -7,13 +7,18 @@
  * businesses manage prospects, clients, and sales pipelines efficiently.
  * -----------------------------------------------------------------------------
  *
- * @package    GrowPath AI CRM
  * @author     Engr Mejba Ahmed
+ *
  * @role       AI Developer • Software Engineer • Cloud DevOps
+ *
  * @website    https://www.mejba.me
+ *
  * @poweredBy  Ramlit Limited — https://ramlit.com
+ *
  * @version    1.0.0
+ *
  * @since      November 7, 2025
+ *
  * @copyright  (c) 2025 Engr Mejba Ahmed
  * @license    Proprietary - All Rights Reserved
  *
@@ -77,7 +82,7 @@ class Order extends Model
         parent::boot();
 
         static::creating(function ($order) {
-            if (!$order->order_number) {
+            if (! $order->order_number) {
                 $order->order_number = static::generateOrderNumber();
             }
         });
@@ -89,7 +94,7 @@ class Order extends Model
     public static function generateOrderNumber(): string
     {
         do {
-            $number = 'ORD-' . now()->format('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
+            $number = 'ORD-'.now()->format('Ymd').'-'.strtoupper(substr(uniqid(), -6));
         } while (static::where('order_number', $number)->exists());
 
         return $number;
@@ -217,6 +222,6 @@ class Order extends Model
      */
     public function getFormattedTotalAttribute(): string
     {
-        return '$' . number_format($this->total, 2);
+        return '$'.number_format($this->total, 2);
     }
 }

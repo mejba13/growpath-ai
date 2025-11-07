@@ -18,7 +18,7 @@ return new class extends Migration
             'blog_posts',
             'blog_categories',
             'blog_tags',
-            'contact_messages'
+            'contact_messages',
         ];
 
         foreach ($tables as $table) {
@@ -41,7 +41,7 @@ return new class extends Migration
             'blog_posts',
             'blog_categories',
             'blog_tags',
-            'contact_messages'
+            'contact_messages',
         ];
 
         foreach ($tables as $table) {

@@ -13,7 +13,7 @@ class SettingsController extends Controller
     public function index(Request $request)
     {
         // Only admins and owners can access settings
-        if (!$request->user()->hasAnyRole(['owner', 'admin'])) {
+        if (! $request->user()->hasAnyRole(['owner', 'admin'])) {
             abort(403);
         }
 
@@ -37,7 +37,7 @@ class SettingsController extends Controller
     public function update(Request $request)
     {
         // Only admins and owners can update settings
-        if (!$request->user()->hasAnyRole(['owner', 'admin'])) {
+        if (! $request->user()->hasAnyRole(['owner', 'admin'])) {
             abort(403);
         }
 
@@ -53,7 +53,7 @@ class SettingsController extends Controller
 
         // Store settings in cache
         foreach ($validated as $key => $value) {
-            Cache::forever('settings.' . $key, $value);
+            Cache::forever('settings.'.$key, $value);
         }
 
         return back()->with('success', 'Settings updated successfully.');

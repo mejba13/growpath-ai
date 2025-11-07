@@ -16,7 +16,7 @@ class ReportController extends Controller
     public function index(Request $request)
     {
         // Check permission
-        if (!$request->user()->can('view-reports')) {
+        if (! $request->user()->can('view-reports')) {
             abort(403);
         }
 
@@ -29,7 +29,7 @@ class ReportController extends Controller
 
         // Prospect metrics
         $prospectQuery = Prospect::query();
-        if (!$canViewAll) {
+        if (! $canViewAll) {
             $prospectQuery->where('user_id', $user->id);
         }
 
@@ -77,7 +77,7 @@ class ReportController extends Controller
 
         // Client metrics
         $clientQuery = Client::query();
-        if (!$canViewAll) {
+        if (! $canViewAll) {
             $clientQuery->where('user_id', $user->id);
         }
 
@@ -94,7 +94,7 @@ class ReportController extends Controller
 
         // Follow-up metrics
         $followUpQuery = FollowUp::query();
-        if (!$canViewAll) {
+        if (! $canViewAll) {
             $followUpQuery->where('user_id', $user->id);
         }
 

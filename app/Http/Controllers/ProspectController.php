@@ -7,13 +7,18 @@
  * businesses manage prospects, clients, and sales pipelines efficiently.
  * -----------------------------------------------------------------------------
  *
- * @package    GrowPath AI CRM
  * @author     Engr Mejba Ahmed
+ *
  * @role       AI Developer • Software Engineer • Cloud DevOps
+ *
  * @website    https://www.mejba.me
+ *
  * @poweredBy  Ramlit Limited — https://ramlit.com
+ *
  * @version    1.0.0
+ *
  * @since      November 7, 2025
+ *
  * @copyright  (c) 2025 Engr Mejba Ahmed
  * @license    Proprietary - All Rights Reserved
  *
@@ -51,7 +56,7 @@ class ProspectController extends Controller
         $query = Prospect::with(['user', 'assignedUser'])
             ->where(function ($query) use ($request) {
                 // Show own prospects or all if has permission
-                if (!$request->user()->can('view-all-prospects')) {
+                if (! $request->user()->can('view-all-prospects')) {
                     $query->where('user_id', $request->user()->id);
                 }
             });
@@ -61,9 +66,9 @@ class ProspectController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('company_name', 'like', "%{$search}%")
-                  ->orWhere('contact_name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('notes', 'like', "%{$search}%");
+                    ->orWhere('contact_name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('notes', 'like', "%{$search}%");
             });
         }
 
@@ -107,6 +112,7 @@ class ProspectController extends Controller
     public function create()
     {
         $users = User::all();
+
         return view('prospects.create', compact('users'));
     }
 
@@ -142,6 +148,7 @@ class ProspectController extends Controller
     public function edit(Prospect $prospect)
     {
         $users = User::all();
+
         return view('prospects.edit', compact('prospect', 'users'));
     }
 
@@ -221,7 +228,7 @@ class ProspectController extends Controller
 
         // Check if user can delete each prospect
         foreach ($prospects as $prospect) {
-            if (!$request->user()->can('delete', $prospect)) {
+            if (! $request->user()->can('delete', $prospect)) {
                 return back()->with('error', 'You do not have permission to delete some of these prospects.');
             }
         }
@@ -249,7 +256,7 @@ class ProspectController extends Controller
 
         // Check if user can update each prospect
         foreach ($prospects as $prospect) {
-            if (!$request->user()->can('update', $prospect)) {
+            if (! $request->user()->can('update', $prospect)) {
                 return back()->with('error', 'You do not have permission to update some of these prospects.');
             }
         }
@@ -257,7 +264,7 @@ class ProspectController extends Controller
         $count = $prospects->count();
         Prospect::whereIn('id', $request->ids)->update(['status' => $request->status]);
 
-        return back()->with('success', "{$count} prospect(s) updated to " . ucfirst($request->status) . ".");
+        return back()->with('success', "{$count} prospect(s) updated to ".ucfirst($request->status).'.');
     }
 
     /**
@@ -277,7 +284,7 @@ class ProspectController extends Controller
 
         // Check if user can update each prospect
         foreach ($prospects as $prospect) {
-            if (!$request->user()->can('update', $prospect)) {
+            if (! $request->user()->can('update', $prospect)) {
                 return back()->with('error', 'You do not have permission to update some of these prospects.');
             }
         }
@@ -286,6 +293,7 @@ class ProspectController extends Controller
         Prospect::whereIn('id', $request->ids)->update(['assigned_to' => $request->assigned_to]);
 
         $assignedTo = $request->assigned_to ? User::find($request->assigned_to)->name : 'unassigned';
+
         return back()->with('success', "{$count} prospect(s) assigned to {$assignedTo}.");
     }
 
@@ -299,7 +307,7 @@ class ProspectController extends Controller
         // Get prospects with same filtering as index
         $query = Prospect::with(['user', 'assignedUser'])
             ->where(function ($query) use ($request) {
-                if (!$request->user()->can('view-all-prospects')) {
+                if (! $request->user()->can('view-all-prospects')) {
                     $query->where('user_id', $request->user()->id);
                 }
             });
@@ -309,8 +317,8 @@ class ProspectController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('company_name', 'like', "%{$search}%")
-                  ->orWhere('contact_name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('contact_name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
@@ -325,7 +333,7 @@ class ProspectController extends Controller
         $prospects = $query->get();
 
         // Generate CSV
-        $filename = 'prospects_' . now()->format('Y-m-d_His') . '.csv';
+        $filename = 'prospects_'.now()->format('Y-m-d_His').'.csv';
 
         $headers = [
             'Content-Type' => 'text/csv',

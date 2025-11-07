@@ -7,13 +7,18 @@
  * businesses manage prospects, clients, and sales pipelines efficiently.
  * -----------------------------------------------------------------------------
  *
- * @package    GrowPath AI CRM
  * @author     Engr Mejba Ahmed
+ *
  * @role       AI Developer • Software Engineer • Cloud DevOps
+ *
  * @website    https://www.mejba.me
+ *
  * @poweredBy  Ramlit Limited — https://ramlit.com
+ *
  * @version    1.0.0
+ *
  * @since      November 7, 2025
+ *
  * @copyright  (c) 2025 Engr Mejba Ahmed
  * @license    Proprietary - All Rights Reserved
  *
@@ -41,7 +46,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, TwoFactorAuthenticatable, HasRoles;
+    use HasFactory, HasRoles, Notifiable, TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
@@ -175,8 +180,10 @@ class User extends Authenticatable
         if ($this->companies->contains($company)) {
             $this->current_company_id = $company->id;
             $this->save();
+
             return true;
         }
+
         return false;
     }
 
@@ -194,6 +201,7 @@ class User extends Authenticatable
     public function roleInCompany(Company $company)
     {
         $pivot = $this->companies()->where('company_id', $company->id)->first()?->pivot;
+
         return $pivot?->role;
     }
 }
