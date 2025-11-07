@@ -82,6 +82,42 @@ class ClientController extends Controller
     }
 
     /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return view('clients.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'company_name' => ['required', 'string', 'max:255'],
+            'industry' => ['nullable', 'string', 'max:255'],
+            'company_size' => ['nullable', 'string', 'max:255'],
+            'contract_start_date' => ['nullable', 'date'],
+            'contract_end_date' => ['nullable', 'date', 'after_or_equal:contract_start_date'],
+            'contract_value' => ['nullable', 'numeric', 'min:0'],
+            'payment_status' => ['nullable', 'string', 'in:current,overdue,pending'],
+            'account_health_score' => ['nullable', 'integer', 'min:0', 'max:100'],
+            'renewal_date' => ['nullable', 'date'],
+            'services_purchased' => ['nullable', 'array'],
+            'notes' => ['nullable', 'string'],
+        ]);
+
+        $validated['user_id'] = auth()->id();
+
+        $client = Client::create($validated);
+
+        return redirect()
+            ->route('clients.show', $client)
+            ->with('success', 'Client created successfully.');
+    }
+
+    /**
      * Display the specified resource.
      */
     public function show(Client $client)

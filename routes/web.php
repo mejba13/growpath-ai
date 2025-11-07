@@ -75,8 +75,8 @@ Route::middleware(['auth', 'approved'])->group(function () {
     Route::post('prospects/bulk/assign', [\App\Http\Controllers\ProspectController::class, 'bulkAssign'])->name('prospects.bulk.assign');
 
     // Client Management
-    Route::resource('clients', \App\Http\Controllers\ClientController::class)->except(['create', 'store']);
     Route::get('clients/export/csv', [\App\Http\Controllers\ClientController::class, 'export'])->name('clients.export');
+    Route::resource('clients', \App\Http\Controllers\ClientController::class);
 
     // Follow-up Management
     Route::resource('follow-ups', \App\Http\Controllers\FollowUpController::class)->except(['show']);

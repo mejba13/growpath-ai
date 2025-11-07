@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Client extends Model
 {
-    use HasFactory;
+    use HasFactory, BelongsToTenant;
 
     /**
      * The attributes that are mass assignable.
@@ -20,6 +20,7 @@ class Client extends Model
     protected $fillable = [
         'prospect_id',
         'user_id',
+        'company_id',
         'company_name',
         'industry',
         'company_size',
