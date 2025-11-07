@@ -34,6 +34,12 @@ jobs:
       - name: Install NPM dependencies
         run: npm ci
 
+      - name: Prepare Laravel Application
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+          touch database/database.sqlite
+
       - name: Run code formatting check
         run: ./vendor/bin/pint --test
 
@@ -106,43 +112,44 @@ jobs:
 
             echo "🔄 Starting deployment process..."
 
-            # Step 1: Install dependencies
+            # Step 1: Verify .env file exists
+            echo "🔍 Checking .env file..."
+            if [ ! -f .env ]; then
+              echo "❌ ERROR: .env file not found! Please create it manually on the server."
+              exit 1
+            fi
+
+            # Step 2: Install dependencies
             echo "📦 Installing Composer dependencies..."
             composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader
 
-            # Step 2: Clear all old caches (CRITICAL - prevents 500 errors)
+            # Step 3: Clear all old caches (CRITICAL - prevents 500 errors)
             echo "🧹 Clearing old caches..."
             php artisan optimize:clear
             php artisan responsecache:clear || true
 
-            # Step 3: Run migrations
+            # Step 4: Run migrations
             echo "🗄️  Running database migrations..."
             php artisan migrate --force
 
-            # Step 4: Publish Livewire assets
+            # Step 5: Publish Livewire assets
             echo "🎨 Publishing Livewire/Volt assets..."
             php artisan livewire:publish --assets || true
 
-            # Step 5: Rebuild framework caches
+            # Step 6: Rebuild framework caches
             echo "🔨 Rebuilding framework caches..."
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
             php artisan event:cache
 
-            # Step 6: Create storage symlink (shared hosting fix)
+            # Step 7: Create storage symlink (shared hosting)
             echo "🔗 Creating storage symlink..."
             php artisan storage:link || true
 
-            # Step 7: Fix permissions
+            # Step 8: Fix permissions (if allowed on shared hosting)
             echo "🔒 Setting correct permissions..."
-            chmod -R 775 storage bootstrap/cache
-            find storage -type f -exec chmod 664 {} \;
-            find storage -type d -exec chmod 775 {} \;
-
-            # Step 8: Queue restart (if using queue workers)
-            echo "🔄 Restarting queue workers..."
-            php artisan queue:restart || true
+            chmod -R 775 storage bootstrap/cache 2>/dev/null || echo "⚠️  Permission changes skipped (not available on shared hosting)"
 
             echo "✅ Deployment completed successfully!"
 
