@@ -4,6 +4,10 @@
 
 A modern, feature-rich Customer Relationship Management (CRM) SaaS application built with Laravel 12, designed to help growing businesses manage prospects, clients, sales pipelines, and subscriptions efficiently.
 
+<img width="2038" height="1418" alt="landing-page" src="https://github.com/user-attachments/assets/c5df4052-20ff-4739-b4d1-2cf9803f390e" />
+<img width="2046" height="1418" alt="dashboard-home" src="https://github.com/user-attachments/assets/7f0732bf-9392-4f24-9e79-30fc2db9bd1d" />
+
+
 ---
 
 ## 📑 Table of Contents
