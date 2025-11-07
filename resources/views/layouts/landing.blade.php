@@ -41,7 +41,12 @@
                 <div class="flex justify-between items-center h-16">
                     <!-- Logo -->
                     <div class="flex-shrink-0">
-                        <a href="{{ route('home') }}" class="flex items-center">
+                        <a href="{{ route('home') }}" class="flex items-center space-x-2">
+                            <div class="flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-primary-accent to-blue-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="w-5 h-5 text-white">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                </svg>
+                            </div>
                             <span class="text-2xl font-bold text-primary-brand">GrowPath AI</span>
                         </a>
                     </div>
@@ -106,8 +111,15 @@
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                     <!-- Brand -->
                     <div class="col-span-1">
-                        <h3 class="text-2xl font-bold mb-4">GrowPath AI</h3>
-                        <p class="text-neutral-300">Empowering businesses to systematically identify, track, and convert high-value prospects.</p>
+                        <div class="flex items-center space-x-2 mb-4">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-primary-accent to-blue-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="w-6 h-6 text-white">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-bold">GrowPath AI</h3>
+                        </div>
+                        <p class="text-neutral-300">Modern CRM solution designed to help businesses grow faster and manage customer relationships effectively.</p>
                     </div>
 
                     <!-- Product -->
