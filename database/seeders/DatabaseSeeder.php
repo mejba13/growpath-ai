@@ -13,23 +13,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Only run seeders in local/testing environments, not in production
-        if (app()->environment('production')) {
-            $this->command->warn('Skipping seeders in production environment.');
-
-            // Only seed roles and permissions in production
-            $this->call(RoleAndPermissionSeeder::class);
-
-            return;
-        }
-
         // Seed roles and permissions first
         $this->call(RoleAndPermissionSeeder::class);
 
+        // Create users without factories (works in production without Faker)
+
         // Create a default admin user with owner role
-        $admin = User::factory()->create([
+        $admin = User::create([
             'name' => 'Admin User',
             'email' => 'admin@growpath.com',
+            'email_verified_at' => now(),
             'password' => Hash::make('password'),
             'role' => 'admin',
             'is_approved' => true,
@@ -39,9 +32,10 @@ class DatabaseSeeder extends Seeder
         $admin->assignRole('owner');
 
         // Create a manager user
-        $manager = User::factory()->create([
+        $manager = User::create([
             'name' => 'Manager User',
             'email' => 'manager@growpath.com',
+            'email_verified_at' => now(),
             'password' => Hash::make('password'),
             'role' => 'user',
             'is_approved' => true,
@@ -51,9 +45,10 @@ class DatabaseSeeder extends Seeder
         $manager->assignRole('manager');
 
         // Create an approved test user with member role
-        $testUser = User::factory()->create([
+        $testUser = User::create([
             'name' => 'Test User',
             'email' => 'test@growpath.com',
+            'email_verified_at' => now(),
             'password' => Hash::make('password'),
             'role' => 'user',
             'is_approved' => true,
@@ -62,19 +57,23 @@ class DatabaseSeeder extends Seeder
 
         $testUser->assignRole('member');
 
-        // Create a pending user (not approved) for testing approval flow
-        User::factory()->create([
-            'name' => 'Pending User',
-            'email' => 'pending@growpath.com',
-            'password' => Hash::make('password'),
-            'role' => 'user',
-            'is_approved' => false,
-        ]);
+        // Only seed test data in non-production environments
+        if (! app()->environment('production')) {
+            // Create a pending user (not approved) for testing approval flow
+            User::create([
+                'name' => 'Pending User',
+                'email' => 'pending@growpath.com',
+                'email_verified_at' => now(),
+                'password' => Hash::make('password'),
+                'role' => 'user',
+                'is_approved' => false,
+            ]);
 
-        // Seed companies and attach users to them
-        $this->call(CompanySeeder::class);
+            // Seed companies and attach users to them
+            $this->call(CompanySeeder::class);
 
-        // Seed advanced data for testing (prospects, clients, follow-ups, blog posts, etc.)
-        $this->call(AdvancedDataSeeder::class);
+            // Seed advanced data for testing (prospects, clients, follow-ups, blog posts, etc.)
+            $this->call(AdvancedDataSeeder::class);
+        }
     }
 }
