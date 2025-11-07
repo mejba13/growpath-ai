@@ -4,14 +4,28 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   deploy:
+    name: Build and Deploy to Production
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install NPM dependencies
+        run: npm ci
+
+      - name: Build frontend assets
+        run: npm run build
 
       - name: Set up SSH key
         run: |
@@ -22,15 +36,30 @@ jobs:
 
       - name: Deploy via rsync
         run: |
-          rsync -avz \
+          rsync -avz --delete \
+            --exclude=".git" \
+            --exclude=".github" \
             --exclude=".env" \
+            --exclude=".env.example" \
             --exclude=".gitignore" \
+            --exclude=".gitattributes" \
+            --exclude="node_modules" \
+            --exclude="tests" \
+            --exclude="storage/framework/cache/**" \
+            --exclude="storage/framework/sessions/**" \
+            --exclude="storage/framework/views/**" \
+            --exclude="storage/logs/**" \
             --exclude="system.ramlit.com/" \
+            --exclude="CLAUDE.md" \
+            --exclude="README.md" \
+            --exclude="phpunit.xml" \
+            --exclude="package.json" \
+            --exclude="package-lock.json" \
             -e "ssh -p ${{ secrets.HOSTINGER_SSH_PORT }}" \
             ./ ${{ secrets.HOSTINGER_SSH_USER }}@${{ secrets.HOSTINGER_SSH_HOST }}:${{ secrets.DEPLOY_PATH }}
 
       - name: Laravel post-deploy commands
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOSTINGER_SSH_HOST }}
           username: ${{ secrets.HOSTINGER_SSH_USER }}
@@ -41,47 +70,53 @@ jobs:
 
             echo "🔄 Starting deployment process..."
 
-            # Step 1: Install dependencies
-            echo "📦 Installing Composer dependencies..."
-            ~/composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader
+            # Step 1: Verify .env file exists
+            echo "🔍 Checking .env file..."
+            if [ ! -f .env ]; then
+              echo "❌ ERROR: .env file not found! Please create it manually on the server."
+              exit 1
+            fi
 
-            # Step 2: Publish Filament assets
-            echo "🎨 Publishing Filament assets..."
-            php artisan filament:assets
+            # Step 2: Install dependencies
+            echo "📦 Installing Composer dependencies..."
+            composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader
 
             # Step 3: Clear all old caches (CRITICAL - prevents 500 errors)
             echo "🧹 Clearing old caches..."
             php artisan optimize:clear
-            php artisan responsecache:clear
+            php artisan responsecache:clear || true
 
             # Step 4: Run migrations
             echo "🗄️  Running database migrations..."
             php artisan migrate --force
 
-            # Step 5: Rebuild framework caches
+            # Step 5: Publish Livewire assets
+            echo "🎨 Publishing Livewire/Volt assets..."
+            php artisan livewire:publish --assets || true
+
+            # Step 6: Rebuild framework caches
             echo "🔨 Rebuilding framework caches..."
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
             php artisan event:cache
 
-            # Step 6: Warm application caches
-            echo "🔥 Warming application caches..."
-            php artisan perf:warm || true
-
-            # Step 7: Create storage symlink (shared hosting fix)
+            # Step 7: Create storage symlink (shared hosting)
             echo "🔗 Creating storage symlink..."
-            rm -rf public/storage
-            ln -s ../storage/app/public public/storage
+            php artisan storage:link || true
 
-            # Step 8: Fix permissions
+            # Step 8: Fix permissions (if allowed on shared hosting)
             echo "🔒 Setting correct permissions..."
-            chmod -R 775 storage bootstrap/cache public/js public/css
-
-            # Step 9: Final cache optimization (ensures everything is fresh)
-            echo "✨ Final cache optimization..."
-            php artisan optimize:clear
-            php artisan config:cache
-            php artisan route:cache
+            chmod -R 775 storage bootstrap/cache 2>/dev/null || echo "⚠️  Permission changes skipped (not available on shared hosting)"
 
             echo "✅ Deployment completed successfully!"
+
+      - name: Deployment status notification
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ Deployment to growpath.ramlit.com completed successfully"
+          else
+            echo "❌ Deployment to growpath.ramlit.com failed"
+            exit 1
+          fi
