@@ -1,19 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-    <rect width="48" height="48" rx="8" fill="#3B82F6"/>
+    <rect width="48" height="48" rx="8" fill="#4F46E5"/>
     <path
-        fill="#FFFFFF"
-        d="M24 10L12 16V32L24 38L36 32V16L24 10Z"
-    />
-    <path
-        fill="#FFFFFF"
-        d="M24 18L30 21.5V29.5L24 33L18 29.5V21.5L24 18Z"
-        opacity="0.5"
-    />
-    <path
-        fill="none"
         stroke="#FFFFFF"
-        stroke-width="2"
         stroke-linecap="round"
-        d="M18 21.5L24 18L30 21.5M24 18V25M24 33V25M18 29.5L24 25M30 29.5L24 25"
+        stroke-linejoin="round"
+        stroke-width="3"
+        d="M26 14h16m0 0v16m0-16l-16 16-8-8-12 12"
     />
 </svg>
